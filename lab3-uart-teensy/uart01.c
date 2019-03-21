@@ -102,6 +102,8 @@ int notmain ( void )
     PUT32(GPIOC_PDDR,GET32(GPIOC_PDDR)|(1<<5));
 
     // switch to 96Mhz
+
+    //MCG modes
     // start in FEI mode FLL Engaged Internal
     PUT8(OSC0_CR,0xA);
     PUT8(MCG_C2,(2<<4)|(1<<2));
@@ -131,23 +133,23 @@ int notmain ( void )
     PUT32(PORTB_PCR17,(3<<8)|(1<<6));
 
     // Set the UART baud rate (Dwelch notes:)
-    //UART baud rate = UART module clock / (16 × divisor)
-    //divisor = UART module clock / (16 × baud)
-    //96000000/(16*baud) = 52.08 = 0x34
-    //.08 * 32 = 2.56 so we want a fraction of 3
+    // UART baud rate = UART module clock / (16 × divisor)
+    // divisor = UART module clock / (16 × baud)
+    // 96000000/(16*baud) = 52.08 = 0x34
+    // .08 * 32 = 2.56 so we want a fraction of 3
 
-    //what if we thought in terms of 32nds of a divisor rather than the divisor
-    //divisor32 = (UART module clock / (16 × baud)) * 32
-    //divisor32 = (UART module clock * 2) / baud
-    //divisor32 = 96000000 * 2 / 115200 = 1666.6
-    //round up
-    //divisor32 = 1667 = 0x683
-    //011010000011
-    //0110100 00011
-    //divisor of 0x34 with a remainder of 3
-    //fraction is divisor32 & 0x1F
-    //lower 8 bits of divisor = (divisor32 >> 5)&0xFF
-    //upper 5 bits of divisor = (divisor32 >> 13)&0x1F
+    // what if we thought in terms of 32nds of a divisor rather than the divisor
+    // divisor32 = (UART module clock / (16 × baud)) * 32
+    // divisor32 = (UART module clock * 2) / baud
+    // divisor32 = 96000000 * 2 / 115200 = 1666.6
+    // round up
+    // divisor32 = 1667 = 0x683
+    // 011010000011
+    // 0110100 00011
+    // divisor of 0x34 with a remainder of 3
+    // fraction is divisor32 & 0x1F
+    // lower 8 bits of divisor = (divisor32 >> 5)&0xFF
+    // upper 5 bits of divisor = (divisor32 >> 13)&0x1F
     PUT8(UART0_BDH,(1667>>13)&0x1F);
     PUT8(UART0_BDL,(1667>> 5)&0xFF);
     PUT8(UART0_C4, (1667>> 0)&0x1F);
