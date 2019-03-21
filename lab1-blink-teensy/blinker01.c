@@ -34,9 +34,11 @@ int notmain ( void )
 
     while(1)
     {
-        PUT32(GPIOC_PTOR,1<<5);
+        // Set LED to turn on
+        PUT32(GPIOC_PSOR,1<<5);
         for(rx=0;rx<1000000;rx++) dummy(rx);
-        PUT32(GPIOC_PTOR,1<<5);
+        // Set LED to turn off
+        PUT32(GPIOC_PCOR,1<<5);
         for(rx=0;rx<1000000;rx++) dummy(rx);
     }
 }
