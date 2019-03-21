@@ -5,7 +5,8 @@ See the README one level up about where to find the reference manual and schemat
 First, we have to send the code in teensy-side over USB (teensy command line) so it's ready to receive new code, then run the unix-side code to send over whatever .bin file. It should look something like this:
 
 > teensy teensy-side/t_bootloader.gcc.thumb/hex
-unix-side/my-install blink.bin
+
+> unix-side/my-install blink.bin
 
 The blink.bin code is just the code from lab01 to blink the LED. 
 
