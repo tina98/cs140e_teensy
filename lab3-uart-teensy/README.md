@@ -47,10 +47,11 @@ upper 5 bits of divisor = (divisor32 >> 13)&0x1F
 ![SIM_SCGC4 register](../ref/SIM_SCGC4.png)
 
 **UART0_BDH, UART0_BDL, UART0_C4**: Enable the baud rate to be 115200 (p.1208-1210, p.1221-1222)
-![UART0_BDH register](../ref/UART0_BDH.png)
-![UART0_BDL register](../ref/UART0_BDL.png)
+![UART0_BDH register](../ref/UART_BDH.png)
+![UART0_BDL register](../ref/UART_BDL.png)
 
 **UART0_C2**: Enable the UART transmitter (p.1211-1212)
+![UART0_BDL register](../ref/UART0_C2.png)
 
 ### Timer
 **STK_CSR, STK_RVR**
