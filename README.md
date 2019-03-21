@@ -17,11 +17,14 @@ To add the alias, you have to put the following in your .bashrc or .bash_profile
 
 
 
-## Lab01-blinker
-Here, we are just turning on an LED (the one on the board, pin 13) 
+## [Lab01-blinker](lab1-blink-teensy)
+Blinking an LED (pin 13) on/off using a while loop delay.
 
-## Lab02-bootloader
+## [Lab02-bootloader](lab2-bootloader-teensy)
+Bootloader to send code from the computer to the Teensy using a UART protocol, instead of over USB with the command line. Because none of our code is flashed onto the Teensy, you have to first send the Teensy-side code over first with the command line interface (USB), then you can run the unix-side and send whatever code (blink.bin from lab01 is provided).
 
-## Lab03-uart
+## [Lab03-uart](lab3-uart-teensy)
+Sending bytes from the Teensy to the computer to print something.
 
-## xLab07-timer-interrupts
+## [Lab07-timer-interrupts](lab7-interrupts-teensy)
+Using timer interrupts to blink an LED instead of using a loop.
