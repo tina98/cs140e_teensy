@@ -1,5 +1,5 @@
 # cs140e_teensy
-I reimplemented some of the CS140E labs using the Teensy 3.2. The main references I used are K20 sub-family reference (https://www.pjrc.com/teensy/K20P64M72SF1RM.pdf), the Teensy website with schematics and technical specifications (https://www.pjrc.com/), and David Welch's Teensy examples. 
+I reimplemented some of the CS140E labs using the Teensy 3.2. The main references I used are [K20 sub-family reference](https://www.pjrc.com/teensy/K20P64M72SF1RM.pdf), the [Teensy website with schematics and technical specifications](https://www.pjrc.com/), the [ARM Cortex-M4 reference manual](http://infocenter.arm.com/help/topic/com.arm.doc.dui0553b/DUI0553.pdf), and [David Welch's Teensy examples](https://github.com/dwelch67/teensy_samples). 
 
 To run these labs, I had an LED connected to pin 12 (and ground), and I also connected to pins 0/1 for the UART RX/TX. The Teensy has a convenient LED by pin 13 so you don't necessarily have to hook up additional LEDs if just one is enough. 
 

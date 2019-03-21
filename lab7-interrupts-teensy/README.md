@@ -5,7 +5,7 @@ See the README one level up about where to find the reference manual and schemat
 Send a string over UART from the Teensy to the computer.
 
 ## Code logic
-1. UART initialization (read [lab3-uart](../lab3-uart-teensy)for more detail)
+1. UART initialization (read [lab3-uart](../lab3-uart-teensy) for more detail)
 2. Set up systick_handler() to be called
 ![Interrupt stack](../ref/interrupts.png)
 3. Inside systick_handler, increment a count (systick_interrupt_count).
