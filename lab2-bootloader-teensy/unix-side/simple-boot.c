@@ -60,8 +60,11 @@ void expect(const char *msg, int fd, unsigned v) {
 		panic("%s: expected %x, got %x\n", msg, v,x);
 	}
 }
-void bit_banging(int fd, const unsigned char* buf, unsigned n){
-	int i, x=1; //x=1;
+
+//Send 1 to Teensy and bounce it back and forth
+// Teensy adds 1 and Unix adds 1
+void bit_addition(int fd, const unsigned char* buf, unsigned n){
+	int i, x=1; 
 	printf("send!!\n");
 	send_byte(fd, x);
 	for (i=0;i<20; i++){
@@ -73,27 +76,12 @@ void bit_banging(int fd, const unsigned char* buf, unsigned n){
 	}	
 	return;
 }
+
 // unix-side bootloader: send the bytes, using the protocol.
 // read/write using put_uint() get_unint().
 void simple_boot(int fd, const unsigned char * buf, unsigned n) { 
 
 	// send SOH
-	// printf("Sending SOH\n");
-
-	// unsigned char x = 1;
-	// int res=0;
-	// while (res == 0) {
-	// 	printf("try\n");
-	// 	send_byte(fd, x);
-	// 	res=get_byte(fd);
-	// 	printf("Got res %d\n", res);
-	// }
-
-	// printf("Send byte successfully%d\n", x);
-
-	// int x=1;
-	// return;
-	// printf("send byte\n");
 	put_uint(fd, SOH);
 	// send file size
 	put_uint(fd, n);
@@ -104,30 +92,22 @@ void simple_boot(int fd, const unsigned char * buf, unsigned n) {
 
 	//verify echoed SOH, crc32 checksum of nbytes, checksum back
 	expect("Should be SOH", fd, SOH);
-	printf("got soh!!\n");
+
 	expect("Should be CRC32(nbytes)", fd, crc32(&n, sizeof(unsigned)));
-	printf("got crc32 right!!\n");
+
 	expect("Should be checksum", fd, cksum);
-	printf("got checksum!!! putting ACK\n");
+
+	// ACK and echo
 	put_uint(fd, ACK);
 	expect("Should be ACK", fd, ACK);
 
-	// u32 ack;
 	printf("sending %d bytes of code now!\n", n);
-	// usleep(100);
 	//copy over binary code
-
 	for (unsigned offset = 0; offset < n; offset += sizeof(unsigned)){
 		unsigned *curr = (unsigned *)(buf + offset);
-		// printf("%x\n", *curr);
+
 		put_uint(fd, *curr);
 		expect("Should be ACK", fd, ACK);
-		// ack = get_uint(fd);
-		// if (ack != ACK) {
-		// 	printf("fuck\n");
-		// } else {
-		// 	printf(".");
-		// }
 	}
 	// send EOT
 	put_uint(fd, EOT);

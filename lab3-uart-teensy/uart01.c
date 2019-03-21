@@ -57,24 +57,7 @@ void ASMDELAY ( unsigned int );
 #define UART_TDRE_MASK 0x80
 
 
-//UART baud rate = UART module clock / (16 × divisor)
-//divisor = UART module clock / (16 × baud)
-//96000000/(16*baud) = 52.08 = 0x34
-//.08 * 32 = 2.56 so we want a fraction of 3
-
-//what if we thought in terms of 32nds of a divisor rather than the divisor
-//divisor32 = (UART module clock / (16 × baud)) * 32
-//divisor32 = (UART module clock * 2) / baud
-//divisor32 = 96000000 * 2 / 115200 = 1666.6
-//round up
-//divisor32 = 1667 = 0x683
-//011010000011
-//0110100 00011
-//divisor of 0x34 with a remainder of 3
-//fraction is divisor32 & 0x1F
-//lower 8 bits of divisor = (divisor32 >> 5)&0xFF
-//upper 5 bits of divisor = (divisor32 >> 13)&0x1F
-
+// Using Systick's Current Value register to delay
 void delay ( void )
 {
     unsigned int ra;
@@ -86,13 +69,14 @@ void delay ( void )
     }
 }
 
+// When there's actually something to send.
 void uart_send_byte(unsigned data) {
     while(!(GET8(UART0_S1)&UART_TDRE_MASK)|| !(GET8(UART0_S1)&UART_TC_MASK)) {}
     PUT8(UART0_D, data);
 }
 
+// Send string from Teensy to computer
 void uart_println(char* data) {
-    // error_light();
     char* c = data;
     while (*c) {
         uart_send_byte(*c++);
@@ -100,7 +84,6 @@ void uart_println(char* data) {
     }
     uart_send_byte('\n');
     delay();
-    // error_light_off();
 }
 
 int notmain ( void )
@@ -114,19 +97,20 @@ int notmain ( void )
     //Enable GPIOC
     PUT32(SIM_SCGC5,GET32(SIM_SCGC5)|(1<<11));
 
-    //configure Port C5
+    // Configure Port C5
     PUT32(PORTC_PCR5,(1<<8));
     PUT32(GPIOC_PDDR,GET32(GPIOC_PDDR)|(1<<5));
 
-    //switch to 96Mhz
-    //start in FEI mode FLL Engaged Internal
+    // switch to 96Mhz
+    // start in FEI mode FLL Engaged Internal
     PUT8(OSC0_CR,0xA);
     PUT8(MCG_C2,(2<<4)|(1<<2));
     PUT8(MCG_C1,(2<<6)|(4<<3));
     while ((GET8(MCG_S) & (1<<1)) == 0) continue;
     while ((GET8(MCG_S) & (1<<4)) != 0) continue;
     while (((GET8(MCG_S)>>2)&3) != 2) continue ;
-    //FBE mode FLL Bypassed External
+
+    // FBE mode FLL Bypassed External
     PUT8(MCG_C5,(3<<0));
     PUT8(MCG_C6,(1<<6)|(0<<0));
     while (!(GET8(MCG_S) & (1<<5))) continue;
@@ -139,20 +123,47 @@ int notmain ( void )
     PUT32(SIM_CLKDIV2,(1<<1));
     PUT32(SIM_SOPT2,(1<<18)|(1<<16)|(1<<12)|(6<<5));
 
+    // Enable UART0 and PortB for TX/RX pins
     PUT32(SIM_SCGC4,GET32(SIM_SCGC4)|(1<<10));
     PUT32(SIM_SCGC5,GET32(SIM_SCGC5)|(1<<10));
+
+    // Enable Alternative 3 (UART transmit), enable drive strength
     PUT32(PORTB_PCR17,(3<<8)|(1<<6));
+
+    // Set the UART baud rate (Dwelch notes:)
+    //UART baud rate = UART module clock / (16 × divisor)
+    //divisor = UART module clock / (16 × baud)
+    //96000000/(16*baud) = 52.08 = 0x34
+    //.08 * 32 = 2.56 so we want a fraction of 3
+
+    //what if we thought in terms of 32nds of a divisor rather than the divisor
+    //divisor32 = (UART module clock / (16 × baud)) * 32
+    //divisor32 = (UART module clock * 2) / baud
+    //divisor32 = 96000000 * 2 / 115200 = 1666.6
+    //round up
+    //divisor32 = 1667 = 0x683
+    //011010000011
+    //0110100 00011
+    //divisor of 0x34 with a remainder of 3
+    //fraction is divisor32 & 0x1F
+    //lower 8 bits of divisor = (divisor32 >> 5)&0xFF
+    //upper 5 bits of divisor = (divisor32 >> 13)&0x1F
     PUT8(UART0_BDH,(1667>>13)&0x1F);
     PUT8(UART0_BDL,(1667>> 5)&0xFF);
     PUT8(UART0_C4, (1667>> 0)&0x1F);
-    //PUT8(UART0_C1,(1<<2)); //??
+
+    // Enable transmitter!!!
     PUT8(UART0_C2,(1<<3));
 
+    // Disable the timer
     PUT32(STK_CSR,0x00000004);
+    // Set the reload value to be the maximum
     PUT32(STK_RVR,0xFFFFFFFF);
+    // Enable timer back
     PUT32(STK_CSR,0x00000005);
 
 
+    // Print over UART
     while(1)
     {
         uart_println("hello world\n");

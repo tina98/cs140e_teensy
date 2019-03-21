@@ -64,15 +64,18 @@ void systick_handler();
 
 volatile uint32_t systick_interrupt_count = 0;
 
+// Increment global count for timer
 void systick_handler() {
     systick_interrupt_count++;
 }
 
+// Get current time (volatile so always capturing it)
 uint32_t current_time() {
     volatile uint32_t x = systick_interrupt_count;
     return x;
 }
 
+// Stay in loop until timer count has incremented [delay_time]
 void teensy_delay(uint32_t delay_time) {
     uint32_t start = systick_interrupt_count;
     while ((current_time() - start) < delay_time);
@@ -113,12 +116,13 @@ int notmain ( void )
     PUT32(SIM_SOPT2,(1<<18)|(1<<16)|(1<<12)|(6<<5));
 
     // SysTick Reload Value Register:
-    //Every 72000 clock cycles -1 = 0xBB7F
+    //Every 72000 clock cycles -1
     PUT32(STK_RVR,71999);
     // Systick control/status register: 
-    //processor clock, count down to 0 asserts systick exception, enable counter
+    // processor clock, count down to 0 asserts systick exception, enable counter
     PUT32(STK_CSR, 0b111);
 
+    // Blink LED on/off
     while(1)
     {
         PUT32(GPIOC_PSOR,1<<5);
