@@ -11,7 +11,7 @@ Send a string over UART from the Teensy to the computer.
 4. Enable Port B for the TX/RX pins, then specifically use the UART transmit mode for the TX pin (alternative 3).
 5. Set the baud rate with dividers (see note below about baud rate).
 6. Enable the transmitter
-7. Timer setup (more about this in lab7-interrupts)
+7. Timer setup (more about this in [lab7-interrupts](../lab7-interrupts-teensy))
 8. While loop to keep printing "hello world"
 
 
@@ -55,7 +55,7 @@ upper 5 bits of divisor = (divisor32 >> 13)&0x1F
 
 ### Timer
 - **STK_CSR, STK_RVR**
-Read lab7 README
+Read [lab7 README](../lab7-interrupts-teensy)
 
 
 
