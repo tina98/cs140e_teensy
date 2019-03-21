@@ -1,0 +1,139 @@
+
+blinker01.elf:     file format elf32-littlearm
+
+
+Disassembly of section .text:
+
+00000000 <_start-0x50>:
+   0:	20002000 	andcs	r2, r0, r0
+   4:	00000051 	andeq	r0, r0, r1, asr r0
+   8:	00000057 	andeq	r0, r0, r7, asr r0
+   c:	00000057 	andeq	r0, r0, r7, asr r0
+  10:	00000057 	andeq	r0, r0, r7, asr r0
+  14:	00000057 	andeq	r0, r0, r7, asr r0
+  18:	00000057 	andeq	r0, r0, r7, asr r0
+  1c:	00000057 	andeq	r0, r0, r7, asr r0
+  20:	00000057 	andeq	r0, r0, r7, asr r0
+  24:	00000057 	andeq	r0, r0, r7, asr r0
+  28:	00000057 	andeq	r0, r0, r7, asr r0
+  2c:	00000057 	andeq	r0, r0, r7, asr r0
+  30:	00000057 	andeq	r0, r0, r7, asr r0
+  34:	00000057 	andeq	r0, r0, r7, asr r0
+  38:	00000057 	andeq	r0, r0, r7, asr r0
+  3c:	00000057 	andeq	r0, r0, r7, asr r0
+  40:	00000057 	andeq	r0, r0, r7, asr r0
+  44:	00000057 	andeq	r0, r0, r7, asr r0
+  48:	00000057 	andeq	r0, r0, r7, asr r0
+  4c:	00000057 	andeq	r0, r0, r7, asr r0
+
+00000050 <_start>:
+  50:	f000 f80c 	bl	6c <notmain>
+  54:	e7ff      	b.n	56 <hang>
+
+00000056 <hang>:
+  56:	e7fe      	b.n	56 <hang>
+
+00000058 <PUT16>:
+  58:	8001      	strh	r1, [r0, #0]
+  5a:	4770      	bx	lr
+
+0000005c <PUT32>:
+  5c:	6001      	str	r1, [r0, #0]
+  5e:	4770      	bx	lr
+
+00000060 <GET32>:
+  60:	6800      	ldr	r0, [r0, #0]
+  62:	4770      	bx	lr
+
+00000064 <dummy>:
+  64:	4770      	bx	lr
+
+00000066 <ASMDELAY>:
+  66:	3801      	subs	r0, #1
+  68:	d1fd      	bne.n	66 <ASMDELAY>
+  6a:	4770      	bx	lr
+
+0000006c <notmain>:
+  6c:	b538      	push	{r3, r4, r5, lr}
+  6e:	481d      	ldr	r0, [pc, #116]	; (e4 <notmain+0x78>)
+  70:	491d      	ldr	r1, [pc, #116]	; (e8 <notmain+0x7c>)
+  72:	f7ff fff1 	bl	58 <PUT16>
+  76:	481b      	ldr	r0, [pc, #108]	; (e4 <notmain+0x78>)
+  78:	491c      	ldr	r1, [pc, #112]	; (ec <notmain+0x80>)
+  7a:	f7ff ffed 	bl	58 <PUT16>
+  7e:	2110      	movs	r1, #16
+  80:	481b      	ldr	r0, [pc, #108]	; (f0 <notmain+0x84>)
+  82:	f7ff ffe9 	bl	58 <PUT16>
+  86:	481b      	ldr	r0, [pc, #108]	; (f4 <notmain+0x88>)
+  88:	f7ff ffea 	bl	60 <GET32>
+  8c:	2180      	movs	r1, #128	; 0x80
+  8e:	0109      	lsls	r1, r1, #4
+  90:	4301      	orrs	r1, r0
+  92:	4818      	ldr	r0, [pc, #96]	; (f4 <notmain+0x88>)
+  94:	f7ff ffe2 	bl	5c <PUT32>
+  98:	2180      	movs	r1, #128	; 0x80
+  9a:	0049      	lsls	r1, r1, #1
+  9c:	4816      	ldr	r0, [pc, #88]	; (f8 <notmain+0x8c>)
+  9e:	f7ff ffdd 	bl	5c <PUT32>
+  a2:	4816      	ldr	r0, [pc, #88]	; (fc <notmain+0x90>)
+  a4:	f7ff ffdc 	bl	60 <GET32>
+  a8:	2320      	movs	r3, #32
+  aa:	1c01      	adds	r1, r0, #0
+  ac:	4319      	orrs	r1, r3
+  ae:	4813      	ldr	r0, [pc, #76]	; (fc <notmain+0x90>)
+  b0:	f7ff ffd4 	bl	5c <PUT32>
+  b4:	4d12      	ldr	r5, [pc, #72]	; (100 <notmain+0x94>)
+  b6:	4813      	ldr	r0, [pc, #76]	; (104 <notmain+0x98>)
+  b8:	2120      	movs	r1, #32
+  ba:	f7ff ffcf 	bl	5c <PUT32>
+  be:	2400      	movs	r4, #0
+  c0:	1c20      	adds	r0, r4, #0
+  c2:	3401      	adds	r4, #1
+  c4:	f7ff ffce 	bl	64 <dummy>
+  c8:	42ac      	cmp	r4, r5
+  ca:	d1f9      	bne.n	c0 <notmain+0x54>
+  cc:	480d      	ldr	r0, [pc, #52]	; (104 <notmain+0x98>)
+  ce:	2120      	movs	r1, #32
+  d0:	f7ff ffc4 	bl	5c <PUT32>
+  d4:	2400      	movs	r4, #0
+  d6:	1c20      	adds	r0, r4, #0
+  d8:	3401      	adds	r4, #1
+  da:	f7ff ffc3 	bl	64 <dummy>
+  de:	42ac      	cmp	r4, r5
+  e0:	d1f9      	bne.n	d6 <notmain+0x6a>
+  e2:	e7e8      	b.n	b6 <notmain+0x4a>
+  e4:	4005200e 	andmi	r2, r5, lr
+  e8:	0000c520 	andeq	ip, r0, r0, lsr #10
+  ec:	0000d928 	andeq	sp, r0, r8, lsr #18
+  f0:	40052000 	andmi	r2, r5, r0
+  f4:	40048038 	andmi	r8, r4, r8, lsr r0
+  f8:	4004b014 	andmi	fp, r4, r4, lsl r0
+  fc:	400ff094 	mulmi	pc, r4, r0	; <UNPREDICTABLE>
+ 100:	000f4240 	andeq	r4, pc, r0, asr #4
+ 104:	400ff08c 	andmi	pc, pc, ip, lsl #1
+
+Disassembly of section .ARM.attributes:
+
+00000000 <.ARM.attributes>:
+   0:	00002e41 	andeq	r2, r0, r1, asr #28
+   4:	61656100 	cmnvs	r5, r0, lsl #2
+   8:	01006962 	tsteq	r0, r2, ror #18
+   c:	00000024 	andeq	r0, r0, r4, lsr #32
+  10:	726f4305 	rsbvc	r4, pc, #335544320	; 0x14000000
+  14:	2d786574 	cfldr64cs	mvdx6, [r8, #-464]!	; 0xfffffe30
+  18:	0600334d 	streq	r3, [r0], -sp, asr #6
+  1c:	084d070a 	stmdaeq	sp, {r1, r3, r8, r9, sl}^
+  20:	12020901 	andne	r0, r2, #16384	; 0x4000
+  24:	15011404 	strne	r1, [r1, #-1028]	; 0x404
+  28:	18031701 	stmdane	r3, {r0, r8, r9, sl, ip}
+  2c:	Address 0x000000000000002c is out of bounds.
+
+
+Disassembly of section .comment:
+
+00000000 <.comment>:
+   0:	3a434347 	bcc	10d0d24 <notmain+0x10d0cb8>
+   4:	4e472820 	cdpmi	8, 4, cr2, cr7, cr0, {1}
+   8:	34202955 	strtcc	r2, [r0], #-2389	; 0x955
+   c:	332e382e 	teqcc	lr, #3014656	; 0x2e0000
+	...
